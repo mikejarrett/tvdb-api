@@ -1,71 +1,15 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-
-"""
-
-"""
 from __future__ import unicode_literals
 
-from collections import defaultdict, MutableMapping
-import urllib2
+from collections import defaultdict
 
 try:
     import xml.etree.cElementTree as ET
 except ImportError:
     import xml.etree.ElementTree as ET
 
-API_KEY = 'D8CA5C3C42F8B120'
-SERIES_URL = 'http://thetvdb.com/api/{api_key}/series/{series_id}/all'
-
-
-class BaseClass(MutableMapping):
-
-    def __init__(self, *args, **kwargs):
-        self.__dict__.update(*args, **kwargs)
-
-    def __setitem__(self, key, value):
-        self.__dict__[key] = value
-
-    def __getitem__(self, key):
-        return self.__dict__[key]
-
-    def __delitem__(self, key):
-        del self.__dict__[key]
-
-    def __iter__(self):
-        return iter(self.__dict__)
-
-    def __len__(self):
-        return len(self.__dict__)
-
-    # def __str__(self):
-    #     '''returns simple dict representation of the mapping'''
-    #     return str(self.__dict__)
-
-    # def __repr__(self):
-    #     '''echoes class, id, & reproducible representation in the REPL'''
-    #     return '{}, Episode({})'.format(super(D, self).__repr__(),
-    #                               self.__dict__)
-
-
-class Season(BaseClass):
-
-    def __iter__(self):
-        return iter(self.episodes)
-
-    @property
-    def episodes(self):
-        for key in sorted(self.__dict__.iterkeys()):
-            if key.startswith('episode_'):
-                episode = getattr(self, key, None)
-                if episode:
-                    yield episode
-
-    def __str__(self):
-        return '<Season: {} ({})>'.format(self.season_number, self.SeriesName)
-
-    def __repr__(self):
-        return self.__str__()
+from common import BaseClass
 
 
 class Episode(BaseClass):
@@ -87,27 +31,17 @@ class Episode(BaseClass):
 
 class Series(BaseClass):
 
-    SeriesName = ''
-
-    def __init__(self, series_id):
-        url = SERIES_URL.format(**{'api_key': API_KEY, 'series_id': series_id})
-        try:
-            result = urllib2.urlopen(url)
-            data = result.read()
-            result.close()
-        except Exception as err:
-            data = ''
-
-        root = ET.fromstring(data)
+    def __init__(self, root):
+        self.SeriesName = ''
 
         series_info = self._get_series_info(root)
         self.raw_data = series_info
-        self.__dict__.update(**series_info)
+        self.update(**series_info)
 
         seasons_info = self._get_seasons_info(root)
-        self.__dict__.update(**seasons_info)
+        self.update(**seasons_info)
 
-        self.__dict__['_seasons'] = sorted(seasons_info.keys())
+        self._seasons = sorted(seasons_info.keys())
 
     def __iter__(self):
         return iter(self.seasons)
@@ -152,3 +86,19 @@ class Series(BaseClass):
     def __repr__(self):
         return self.__str__()
 
+
+class Season(BaseClass):
+
+    def __iter__(self):
+        return iter(self.episodes)
+
+    @property
+    def episodes(self):
+        for key in sorted(self.__dict__.iterkeys()):
+            if key.startswith('episode_'):
+                episode = getattr(self, key, None)
+                if episode:
+                    yield episode
+
+    def __str__(self):
+        return '<Season: {} ({})>'.format(self.season_number, self.SeriesName)
