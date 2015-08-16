@@ -1,8 +1,7 @@
-#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
-from tvdb.models.common import BaseClass
+from .common import BaseClass
 
 
 class SearchSeries(BaseClass):
@@ -16,10 +15,10 @@ class SearchSeries(BaseClass):
         self.raw_data = data
         self.update(**data)
 
-    def __str__(self):
+    def __str__(self):  # pragma: no cover
         return "<SearchSeries: {} - {}>".format(self.SeriesName, self.id)
 
-    def __repr__(self):
+    def __repr__(self):  # pragma: no cover
         return self.__str__()
 
     @property
@@ -45,8 +44,8 @@ class SearchResult(object):
                 result.append(SearchSeries(self._tvdb_class, parsed))
         return result
 
-    def __str__(self):
+    def __str__(self):  # pragma: no cover
         return "<SearchResult: {}>".format(self.query)
 
-    def __repr__(self):
+    def __repr__(self):  # pragma: no cover
         return self.__str__()

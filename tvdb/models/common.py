@@ -5,7 +5,7 @@ from __future__ import unicode_literals
 from collections import MutableMapping
 
 
-class BaseClass(MutableMapping):
+class BaseClass(MutableMapping):  # pragma: no cover
 
     def __init__(self, *args, **kwargs):
         self.__dict__.update(*args, **kwargs)

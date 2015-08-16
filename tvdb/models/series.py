@@ -1,13 +1,7 @@
-#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
 from collections import defaultdict
-
-try:
-    import xml.etree.cElementTree as ET
-except ImportError:
-    import xml.etree.ElementTree as ET
 
 from .common import BaseClass
 
@@ -18,14 +12,14 @@ class Episode(BaseClass):
     SeriesName = ''
     SeasonNumber = ''
 
-    def __str__(self):
+    def __str__(self):  # pragma: no cover
         return '<Episode: {} ({} - Season {})>'.format(
             self.EpisodeNumber,
             self.SeriesName,
             self.SeasonNumber,
         )
 
-    def __repr__(self):
+    def __repr__(self):  # pragma: no cover
         return self.__str__()
 
 
@@ -53,7 +47,8 @@ class Series(BaseClass):
             if season:
                 yield season
 
-    def _get_series_info(self, root):
+    @staticmethod
+    def _get_series_info(root):
         data = {}
         for elem in root.iterfind('Series'):
             data = {child.tag: child.text for child in elem.getchildren()}
@@ -80,10 +75,10 @@ class Series(BaseClass):
     def __len__(self):
         return len(self.seasons)
 
-    def __str__(self):
+    def __str__(self):  # pragma: no cover
         return '<Series: {}>'.format(self.SeriesName)
 
-    def __repr__(self):
+    def __repr__(self):  # pragma: no cover
         return self.__str__()
 
 
@@ -100,8 +95,8 @@ class Season(BaseClass):
                 if episode:
                     yield episode
 
-    def __str__(self):
+    def __str__(self):  # pragma: no cover
         return '<Season: {} ({})>'.format(self.season_number, self.SeriesName)
 
-    def __repr__(self):
+    def __repr__(self):  # pragma: no cover
         return self.__str__()

@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
@@ -8,11 +7,7 @@ try:
 except ImportError:
     import xml.etree.ElementTree as ET
 
-from common import BaseClass
-
 from models.search import SearchResult
-from models.series import Episode
-from models.series import Season
 from models.series import Series
 
 API_KEY = 'D8CA5C3C42F8B120'
