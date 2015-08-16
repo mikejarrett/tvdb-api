@@ -1,21 +1,26 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+from __future__ import unicode_literals
+
+import urllib2
+try:
+    import xml.etree.cElementTree as ET
+except ImportError:
+    import xml.etree.ElementTree as ET
 
 from common import BaseClass
 
-from search import SearchResult
-
-from series import Episode
-from series import Season
-from series import Series
-
+from models.search import SearchResult
+from models.series import Episode
+from models.series import Season
+from models.series import Series
 
 API_KEY = 'D8CA5C3C42F8B120'
 BASE_URL = 'http://thetvdb.com/api'
 SERIES_URL = 'http://thetvdb.com/api/{api_key}/series/{series_id}/all'
 
 
-class TVDB(class):
+class TVDB(object):
 
     @staticmethod
     def _get(url):
@@ -34,11 +39,11 @@ class TVDB(class):
         url = '{}/GetSeries.php?seriesname={}'.format(BASE_URL, query)
         data = cls._get(url)
         root_node = ET.fromstring(data)
-        return SearchResult(query, root_node)
+        return SearchResult(cls, query, root_node)
 
     @classmethod
-    def series(series_id):
+    def series(cls, series_id):
         url = SERIES_URL.format(**{'api_key': API_KEY, 'series_id': series_id})
-        data = get(url)
+        data = cls._get(url)
         root_node = ET.fromstring(data)
-        return Seriesl(root_node)
+        return Series(root_node)

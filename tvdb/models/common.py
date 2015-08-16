@@ -3,7 +3,6 @@
 from __future__ import unicode_literals
 
 from collections import MutableMapping
-import urllib2
 
 
 class BaseClass(MutableMapping):

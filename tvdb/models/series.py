@@ -9,7 +9,7 @@ try:
 except ImportError:
     import xml.etree.ElementTree as ET
 
-from common import BaseClass
+from .common import BaseClass
 
 
 class Episode(BaseClass):
@@ -102,3 +102,6 @@ class Season(BaseClass):
 
     def __str__(self):
         return '<Season: {} ({})>'.format(self.season_number, self.SeriesName)
+
+    def __repr__(self):
+        return self.__str__()

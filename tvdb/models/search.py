@@ -2,46 +2,51 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
-import urllib2
-
-try:
-    import xml.etree.cElementTree as ET
-except ImportError:
-    import xml.etree.ElementTree as ET
-
-from common import BaseClass
+from tvdb.models.common import BaseClass
 
 
 class SearchSeries(BaseClass):
 
     SeriesName = ''
+    _series = None
     id = ''
 
-    def __init__(self, data):
+    def __init__(self, tvdb_class, data):
+        self._tvdb_class = tvdb_class
         self.raw_data = data
         self.update(**data)
 
     def __str__(self):
         return "<SearchSeries: {} - {}>".format(self.SeriesName, self.id)
 
+    def __repr__(self):
+        return self.__str__()
+
+    @property
+    def series(self):
+        if getattr(self, '_series', None) is None:
+            self._series = self._tvdb_class.series(self.id)
+        return self._series
+
 
 class SearchResult(object):
 
-    def __init__(self, query, root_node):
+    def __init__(self, tvdb_class, query, root_node):
+        self._tvdb_class = tvdb_class
         self.query = query
-        self.results = self._parse(root_node)
+        self.results = self._parse_series(root_node)
         self.hits = len(self.results)
 
-    def _parse(self, root):
+    def _parse_series(self, root):
         result = []
         for elem in root.iterfind('Series'):
             parsed = {child.tag: child.text for child in elem.getchildren()}
             if parsed:
-                result.append(SearchSeries(parsed))
+                result.append(SearchSeries(self._tvdb_class, parsed))
         return result
 
     def __str__(self):
         return "<SearchResult: {}>".format(self.query)
 
     def __repr__(self):
-        return self.__unicode__()
+        return self.__str__()
