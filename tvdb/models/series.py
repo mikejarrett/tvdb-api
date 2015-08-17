@@ -65,7 +65,7 @@ class Series(BaseClass):
 
                 parsed['SeriesName'] = self.SeriesName
 
-                seasons[season_number_str].__dict__.update({
+                seasons[season_number_str].update({
                     episode_number: Episode(**parsed),
                     'season_number': season_number,
                     'SeriesName': self.SeriesName,
@@ -89,7 +89,7 @@ class Season(BaseClass):
 
     @property
     def episodes(self):
-        for key in sorted(self.__dict__.iterkeys()):
+        for key in sorted(self.keys()):
             if key.startswith('episode_'):
                 episode = getattr(self, key, None)
                 if episode:

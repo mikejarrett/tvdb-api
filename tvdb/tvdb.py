@@ -1,7 +1,11 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
-import urllib2
+try:
+	import urllib.request as urllib2
+except ImportError:
+	import urllib2
+
 try:
     import xml.etree.cElementTree as ET
 except ImportError:
