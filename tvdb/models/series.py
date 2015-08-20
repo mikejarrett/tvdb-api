@@ -3,10 +3,12 @@ from __future__ import unicode_literals
 
 from collections import defaultdict
 
-from .common import BaseClass
+from tvdb import settings
+from tvdb.models import BaseClass
+from tvdb.models.mixins import ThumbnailMixin
 
 
-class Episode(BaseClass):
+class Episode(BaseClass, ThumbnailMixin):
 
     EpisodeNumber = ''
     SeriesName = ''
@@ -23,7 +25,7 @@ class Episode(BaseClass):
         return self.__str__()
 
 
-class Series(BaseClass):
+class Series(BaseClass, ThumbnailMixin):
 
     def __init__(self, root):
         self.SeriesName = ''
@@ -84,16 +86,23 @@ class Series(BaseClass):
 
 class Season(BaseClass):
 
-    def __iter__(self):
-        return iter(self.episodes)
+    _episodes = []
+
+    def _populate_episodes(self):
+        for season_number in sorted(self.keys()):
+            if season_number.startswith('episode_'):
+                self._episodes.append(season_number)
+        self._episodes = sorted(self._episodes)
 
     @property
     def episodes(self):
-        for key in sorted(self.keys()):
-            if key.startswith('episode_'):
-                episode = getattr(self, key, None)
-                if episode:
-                    yield episode
+        if not self._episodes:
+            self._populate_episodes()
+
+        for key in self._episodes:
+            episode = getattr(self, key, None)
+            if episode:
+                yield episode
 
     def __str__(self):  # pragma: no cover
         return '<Season: {} ({})>'.format(self.season_number, self.SeriesName)

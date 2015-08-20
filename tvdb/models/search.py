@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
-from .common import BaseClass
+from tvdb.models.common import BaseClass
 
 
 class SearchSeries(BaseClass):

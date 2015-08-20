@@ -8,15 +8,12 @@ except ImportError:
 
 try:
     import xml.etree.cElementTree as ET
-except ImportError:
+except ImportError:  # pragma: no cover
     import xml.etree.ElementTree as ET
 
 from models.search import SearchResult
 from models.series import Series
-
-API_KEY = 'D8CA5C3C42F8B120'
-BASE_URL = 'http://thetvdb.com/api'
-SERIES_URL = 'http://thetvdb.com/api/{api_key}/series/{series_id}/all'
+from . import settings
 
 
 class TVDB(object):
@@ -35,14 +32,17 @@ class TVDB(object):
     @classmethod
     def search(cls, query):
         query = urllib2.quote(query)
-        url = '{}/GetSeries.php?seriesname={}'.format(BASE_URL, query)
+        url = '{}/GetSeries.php?seriesname={}'.format(settings.BASE_URL, query)
         data = cls._get(url)
         root_node = ET.fromstring(data)
         return SearchResult(cls, query, root_node)
 
     @classmethod
     def series(cls, series_id):
-        url = SERIES_URL.format(**{'api_key': API_KEY, 'series_id': series_id})
+        url = settings.SERIES_URL.format(
+            api_key=settings.API_KEY,
+            series_id=series_id
+        )
         data = cls._get(url)
         root_node = ET.fromstring(data)
         return Series(root_node)
