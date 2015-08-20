@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
+# pylint: disable=no-name-in-module,broad-except,relative-import
 from __future__ import unicode_literals
 
 try:
-	import urllib.request as urllib2
+    import urllib.request as urllib2
 except ImportError:
-	import urllib2
+    import urllib2
 
 try:
     import xml.etree.cElementTree as ET
@@ -24,7 +25,7 @@ class TVDB(object):
             result = urllib2.urlopen(url)
             data = result.read()
             result.close()
-        except Exception as err:
+        except Exception:
             data = ''
 
         return data

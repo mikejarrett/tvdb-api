@@ -10,7 +10,8 @@ class SearchSeries(BaseClass):
     _series = None
     id = ''
 
-    def __init__(self, tvdb_class, data):
+    def __init__(self, tvdb_class, data, *args, **kwargs):
+        super(SearchSeries, self).__init__(*args, **kwargs)
         self._tvdb_class = tvdb_class
         self.raw_data = data
         self.update(**data)

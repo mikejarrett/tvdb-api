@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
+# pylint: disable=invalid-name
 from __future__ import unicode_literals
 
 from collections import defaultdict
 
-from tvdb import settings
 from tvdb.models import BaseClass
 from tvdb.models.mixins import ThumbnailMixin
 
@@ -27,7 +27,8 @@ class Episode(BaseClass, ThumbnailMixin):
 
 class Series(BaseClass, ThumbnailMixin):
 
-    def __init__(self, root):
+    def __init__(self, root, *args, **kwargs):
+        super(Series, self).__init__(*args, **kwargs)
         self.SeriesName = ''
 
         series_info = self._get_series_info(root)
