@@ -4,7 +4,7 @@ from __future__ import unicode_literals
 
 from collections import defaultdict
 
-from tvdb.models import BaseClass
+from tvdb.models.common import BaseClass
 from tvdb.models.mixins import ThumbnailMixin
 
 

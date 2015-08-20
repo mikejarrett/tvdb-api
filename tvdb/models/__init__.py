@@ -1,7 +1,5 @@
 # -*- coding: utf-8 -*-
 
-from tvdb.models.common import BaseClass
-
 from tvdb.models.search import SearchResult
 from tvdb.models.search import SearchSeries
 
