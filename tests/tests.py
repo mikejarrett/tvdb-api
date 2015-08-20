@@ -18,7 +18,7 @@ except ImportError:
 from tvdb import TVDB as tvdb
 from tvdb import models
 from tvdb import settings
-from tvdb.tests.data import (
+from .data import (
     EPISODE_DATA_PARSED,
     SEARCH_DATA_PARSED,
     SEARCH_DATA_XML,
